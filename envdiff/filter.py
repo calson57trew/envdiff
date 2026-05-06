@@ -33,7 +33,17 @@ def filter_env(
     Returns
     -------
     Filtered ``dict``.
+
+    Raises
+    ------
+    TypeError:
+        If *include* or *exclude* is not a list (or ``None``).
     """
+    if include is not None and not isinstance(include, list):
+        raise TypeError(f"'include' must be a list or None, got {type(include).__name__!r}")
+    if exclude is not None and not isinstance(exclude, list):
+        raise TypeError(f"'exclude' must be a list or None, got {type(exclude).__name__!r}")
+
     result = dict(env)
 
     if include is not None:
