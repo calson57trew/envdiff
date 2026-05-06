@@ -80,6 +80,7 @@ def export_diff(
         raise ValueError(f"Unsupported export format: {fmt}")
 
     if output_path is not None:
+        output_path.parent.mkdir(parents=True, exist_ok=True)
         output_path.write_text(content, encoding="utf-8")
 
     return content
