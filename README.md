@@ -63,6 +63,19 @@ print(results.mismatched)
 | `--strict` | Exit with non-zero code if any differences are found |
 | `--ignore KEY` | Ignore a specific key during comparison |
 | `--json` | Output results as JSON |
+| `--values` | Include actual values in the diff output (use with caution) |
+
+---
+
+## CI Integration
+
+envdiff works well in CI pipelines to catch missing environment variables before deployment:
+
+```yaml
+# GitHub Actions example
+- name: Check env parity
+  run: envdiff .env.example .env.production --strict
+```
 
 ---
 
