@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from enum import Enum
-from typing import List, Tuple
+from typing import Dict, List, Tuple
 
 from envdiff.differ import DiffResult
 
@@ -63,3 +63,26 @@ def sorted_entries(
     if order == SortOrder.SEVERITY:
         return sorted(entries, key=lambda e: (_entry_severity(e), e[0].lower()))
     return entries
+
+
+def grouped_entries(result: DiffResult) -> Dict[str, List[str]]:
+    """Return diff entries grouped by category.
+
+    Returns a dictionary mapping each category name to a sorted list of
+    keys belonging to that category.  Categories with no entries are
+    omitted from the result.
+
+    Parameters
+    ----------
+    result:
+        The :class:`~envdiff.differ.DiffResult` to group.
+
+    Returns
+    -------
+    dict mapping category string to sorted list of key names.
+    """
+    groups: Dict[str, List[str]] = {}
+    for key, category in _categorised_entries(result):
+        groups.setdefault(category, []).append(key)
+    # Sort keys within each group for deterministic output.
+    return {cat: sorted(keys) for cat, keys in groups.items()}
