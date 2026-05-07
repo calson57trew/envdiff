@@ -35,6 +35,19 @@ class DiffSummary:
             "total_issues": self.total_issues,
         }
 
+    def __str__(self) -> str:
+        """Return a human-readable one-line summary."""
+        if self.is_clean:
+            return f"Clean ({self.total_keys} keys, all identical)"
+        parts = []
+        if self.missing_in_compare:
+            parts.append(f"{self.missing_in_compare} missing in compare")
+        if self.missing_in_base:
+            parts.append(f"{self.missing_in_base} missing in base")
+        if self.mismatched:
+            parts.append(f"{self.mismatched} mismatched")
+        return f"{self.total_keys} keys, issues: {', '.join(parts)}"
+
 
 def summarize(result: DiffResult) -> DiffSummary:
     """Return a :class:`DiffSummary` for *result*."""
