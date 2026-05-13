@@ -29,6 +29,13 @@ def test_save_creates_file(diff_result, snapshot_path):
     assert os.path.isfile(snapshot_path)
 
 
+def test_save_creates_intermediate_directories(diff_result, tmp_path):
+    """save_snapshot should create parent directories if they don't exist."""
+    nested_path = str(tmp_path / "a" / "b" / "c" / "snap.json")
+    save_snapshot(diff_result, nested_path)
+    assert os.path.isfile(nested_path)
+
+
 def test_save_snapshot_structure(diff_result, snapshot_path):
     save_snapshot(diff_result, snapshot_path, label="prod-vs-staging")
     with open(snapshot_path) as fh:
@@ -70,6 +77,13 @@ def test_load_raises_on_bad_version(snapshot_path, diff_result):
 
     with pytest.raises(ValueError, match="Unsupported snapshot version"):
         load_snapshot(snapshot_path)
+
+
+def test_load_raises_on_missing_file(tmp_path):
+    """load_snapshot should raise FileNotFoundError for a non-existent path."""
+    missing = str(tmp_path / "does_not_exist.json")
+    with pytest.raises(FileNotFoundError):
+        load_snapshot(missing)
 
 
 def test_save_empty_result(snapshot_path):
