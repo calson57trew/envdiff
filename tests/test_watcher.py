@@ -40,6 +40,13 @@ def test_current_mtime_missing_returns_minus_one(env_dir: Path) -> None:
     assert _current_mtime(env_dir / "nope.env") == -1.0
 
 
+def test_current_mtime_existing_file(env_dir: Path) -> None:
+    """_current_mtime should return the actual mtime for an existing file."""
+    p = env_dir / "existing.env"
+    _write(p, "X=1\n")
+    assert _current_mtime(p) == p.stat().st_mtime
+
+
 def test_watch_fires_callback_on_change(env_dir: Path) -> None:
     base = env_dir / "base.env"
     compare = env_dir / "compare.env"
