@@ -67,6 +67,18 @@ def test_summarize_as_dict_keys(dirty_result):
     assert set(d.keys()) == expected_keys
 
 
+def test_summarize_as_dict_values(dirty_result):
+    """Ensure as_dict values match the DiffSummary fields."""
+    s = summarize(dirty_result)
+    d = s.as_dict()
+    assert d["total_keys"] == s.total_keys
+    assert d["missing_in_compare"] == s.missing_in_compare
+    assert d["missing_in_base"] == s.missing_in_base
+    assert d["mismatched"] == s.mismatched
+    assert d["identical"] == s.identical
+    assert d["total_issues"] == s.total_issues
+
+
 def test_summarize_empty_result():
     result = DiffResult(
         missing_in_compare=[],
