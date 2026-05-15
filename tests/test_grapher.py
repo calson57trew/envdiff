@@ -102,3 +102,12 @@ def test_build_graph_empty_env():
     assert graph.nodes == {}
     assert graph.roots() == []
     assert graph.leaves() == []
+
+
+def test_build_graph_transitive_depended_by(simple_env):
+    """HOST is indirectly used by REPLICA_DSN via DSN; depended_by should
+    reflect direct dependents only (i.e. DSN, not REPLICA_DSN)."""
+    graph = build_graph(simple_env)
+    host_depended_by = graph.nodes["HOST"].depended_by
+    assert "DSN" in host_depended_by
+    assert "REPLICA_DSN" not in host_depended_by
